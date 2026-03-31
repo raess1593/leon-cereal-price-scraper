@@ -1,9 +1,12 @@
-# 🕷️ Leon Cereal Price Scraper Project
+# 🌿 Leon Cereal Price Scraper Project
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white)
 ![SQLAlchemy](https://img.shields.io/badge/ORM-SQLAlchemy-D71F00)
 ![Status](https://img.shields.io/badge/Status-Scraper%20Project-2E8B57)
+
+## 🖼️ Project Snapshot
+![Project Snapshot](assets/image.png)
 
 ## 🚀 Overview
 This project is focused on scraping, cleaning, and storing weekly cereal prices published by Lonja de Leon.
