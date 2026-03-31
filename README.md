@@ -1,35 +1,106 @@
-# 🌾 León Cereal Price Predictor: Agricultural AI
+# 🕷️ Leon Cereal Price Scraper Project
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)
-![Docker](https://img.shields.io/badge/Docker-Ready-blue)
-![MLflow](https://img.shields.io/badge/MLflow-Tracking-orange)
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/ORM-SQLAlchemy-D71F00)
+![Status](https://img.shields.io/badge/Status-Scraper%20Project-2E8B57)
 
-## 📌 Project Purpose
-An *End-to-End* Machine Learning system designed to help farmers predict the price fluctuations of cereals (wheat, barley, corn) at the local agricultural market (Lonja de León). 
+## 🚀 Overview
+This project is focused on scraping, cleaning, and storing weekly cereal prices published by Lonja de Leon.
 
-This project demonstrates the full lifecycle of an ML model (core MLOps), going from raw data extraction to a fully containerized production deployment.
+Main capabilities:
+- 🌐 Scrapes historical price tables from multiple URL patterns.
+- 🧹 Cleans noisy labels and numeric formats from raw HTML tables.
+- 🗃️ Stores structured records in SQLite using SQLAlchemy models.
+- 📈 Builds a cleaned dataset with polynomial interpolation for missing values.
 
-## 🏗️ Architecture & Tech Stack
-The pipeline consists of 5 main modules:
-1. **Web Scraping:** `pandas`, `requests`, and `BeautifulSoup` to extract weekly historical price data.
-2. **Database:** SQLite managed through the `SQLAlchemy` ORM.
-3. **ML Modeling:** Tree-based models (`scikit-learn`, Random Forest/XGBoost) for time-series forecasting.
-4. **Experiment Tracking:** `MLflow` for logging hyperparameters and model performance metrics.
-5. **Deployment (Serving):** RESTful API built with `FastAPI` and containerized using `Docker`.
+## 🧠 What The Project Demonstrates
+The implementation showcases practical engineering skills beyond basic scripting:
 
-## 📂 Project Structure (MVP)
+- 🔍 Resilient web scraping with session handling and user-agent rotation.
+- 🧭 Adaptive source discovery when endpoint formats change over time.
+- 🧪 Defensive data cleaning for real-world inconsistencies.
+- 🧱 Clear data modeling with ORM-based schema design.
+- ⚙️ Transaction-safe persistence with rollback handling.
+- 📊 Missing-value treatment using polynomial interpolation (`order=3`).
+
+## 🏗️ Current Scraper Workflow
+The current workflow in this repository is:
+
+1. `scraper.py` fetches HTML tables from Lonja de Leon pages.
+2. `process.py` normalizes row labels and converts prices to float values.
+3. `main.py` orchestrates date traversal, domain fallback, and persistence.
+4. `models.py` defines the `crop_prices` schema.
+5. `database.py` configures SQLAlchemy engine/session/base.
+6. `clean_db.py` replaces zero placeholders and generates `crop_prices_clean` using polynomial interpolation.
+
+## 📁 Project Structure
 ```text
-leon-ceral-price-AI/
-├── data/                 # Local databases (SQLite) and raw CSVs
-├── notebooks/            # Jupyter notebooks for EDA and sandbox testing
-├── src/                  # Production source code
-│   ├── scraper/          # Data extraction scripts
-│   ├── database/         # SQLAlchemy models and DB configuration
-│   ├── ml/               # Model training and MLflow integration
-│   └── api/              # FastAPI endpoints
-├── .env.example          # Environment variables template
-├── docker-compose.yml    # Container orchestration
-├── Dockerfile            # API build recipe
-├── requirements.txt      # Project dependencies
+leon-cereal-price-AI/
+├── data/
+│   └── lonja.db                 # SQLite database file
+├── src/
+│   ├── clean_db.py              # Interpolation-based cleaning and imputation
+│   ├── database.py              # SQLAlchemy engine, session, and Base
+│   ├── main.py                  # Scraping orchestration and DB persistence
+│   ├── models.py                # ORM model for cereal prices
+│   ├── process.py               # Raw-to-clean transformation logic
+│   ├── read_db.py               # Quick table inspection script
+│   └── scraper.py               # HTTP extraction and HTML table parsing
+├── LICENSE
 └── README.md
+```
+
+## 🧩 Data Model
+Raw table: `crop_prices`
+
+- `date` (primary key)
+- `feed_wheat`
+- `barley`
+- `triticale`
+- `rye`
+- `oats`
+- `corn`
+
+Clean table: `crop_prices_clean`
+
+- Same schema as `crop_prices`
+- Zero values converted to missing
+- Missing values interpolated with polynomial method (`order=3`)
+
+## ⚙️ How To Run
+1. Install dependencies in your environment.
+2. Run the scraper + storage workflow:
+
+```bash
+python src/main.py
+```
+
+3. Generate the cleaned/interpolated table:
+
+```bash
+python src/clean_db.py
+```
+
+4. Inspect stored data:
+
+```bash
+python src/read_db.py
+```
+
+## 📌 Professional Skills Developed
+- ✅ Scraper engineering for semi-structured web sources.
+- ✅ Robust scraping strategies for unstable web sources.
+- ✅ SQLAlchemy ORM modeling and database session management.
+- ✅ Error-tolerant parsing and cleaning for production-like inputs.
+- ✅ Interpolation-based imputation for time-dependent price series.
+
+## 🔭 Next Technical Steps
+- Add unit tests for `clean_data` and `clean_price`.
+- Introduce logging levels instead of print-based tracing.
+- Add CLI arguments for batch size, start date, and selected domain.
+- Add outlier detection before interpolation.
+
+---
+
+Built with focus on scraper robustness, data quality, and maintainable extraction workflows. 🌱
