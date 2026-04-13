@@ -16,6 +16,7 @@ Main capabilities:
 - 🧹 Cleans noisy labels and numeric formats from raw HTML tables.
 - 🗃️ Stores structured records in SQLite using SQLAlchemy models.
 - 📈 Builds a cleaned dataset with polynomial interpolation for missing values.
+- ☁️ Includes a cloud migration step to export data to AWS S3.
 
 ## 🧠 What The Project Demonstrates
 The implementation showcases practical engineering skills beyond basic scripting:
@@ -36,6 +37,7 @@ The current workflow in this repository is:
 4. `models.py` defines the `crop_prices` schema.
 5. `database.py` configures SQLAlchemy engine/session/base.
 6. `clean_db.py` replaces zero placeholders and generates `crop_prices_clean` using polynomial interpolation.
+7. `data_migration_to_s3.py` reads local SQLite data and uploads it to AWS S3.
 
 ## 📁 Project Structure
 ```text
@@ -44,11 +46,11 @@ leon-cereal-price-AI/
 │   └── lonja.db                 # SQLite database file
 ├── src/
 │   ├── clean_db.py              # Interpolation-based cleaning and imputation
+│   ├── data_migration_to_s3.py  # Upload pipeline from local DB to AWS S3
 │   ├── database.py              # SQLAlchemy engine, session, and Base
 │   ├── main.py                  # Scraping orchestration and DB persistence
 │   ├── models.py                # ORM model for cereal prices
 │   ├── process.py               # Raw-to-clean transformation logic
-│   ├── read_db.py               # Quick table inspection script
 │   └── scraper.py               # HTTP extraction and HTML table parsing
 ├── LICENSE
 └── README.md
@@ -85,11 +87,22 @@ python src/main.py
 python src/clean_db.py
 ```
 
-4. Inspect stored data:
+4. Run cloud migration to S3:
 
 ```bash
-python src/read_db.py
+python src/data_migration_to_s3.py
 ```
+
+## ☁️ Cloud (AWS S3)
+The project includes a migration utility in `src/data_migration_to_s3.py` to move local SQLite data to S3.
+
+Before running it, configure AWS credentials and region in your environment (for example with `.env` and your local AWS profile).
+
+Expected flow:
+- Connect to local SQLite database (`data/lonja.db`).
+- Read table data into memory.
+- Create bucket if needed.
+- Upload dataset to S3 path (`s3://<bucket>/bronze/lonja.csv`).
 
 ## 📌 Professional Skills Developed
 - ✅ Scraper engineering for semi-structured web sources.
@@ -97,6 +110,7 @@ python src/read_db.py
 - ✅ SQLAlchemy ORM modeling and database session management.
 - ✅ Error-tolerant parsing and cleaning for production-like inputs.
 - ✅ Interpolation-based imputation for time-dependent price series.
+- ✅ Basic cloud data migration workflow to object storage (S3).
 
 ## 🔭 Next Technical Steps
 - Add unit tests for `clean_data` and `clean_price`.
